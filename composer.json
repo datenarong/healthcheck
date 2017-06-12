@@ -1,0 +1,22 @@
+{
+    "name": "datenarong/health-check",
+    "description": "health check is monitor tool.",
+    "type": "project",
+    "license": "Apache License 2.0",
+    "keywords": [
+        "health",
+        "monitor"
+    ],
+    "authors": [{
+        "name": "Datenarong Tarin",
+        "email": "datenarong@gmail.com"
+    }],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.0"
+    },
+    "require-dev": {
+        "phpmd/phpmd": "2.6.*",
+        "squizlabs/php_codesniffer": "3.*"
+    }
+}
