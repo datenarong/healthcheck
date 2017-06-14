@@ -3,54 +3,81 @@ namespace Datenarong\HealthCheck\Classes;
 
 class Mysql
 {
+    private $start_time;
     private $outputs = [
-        'module'  => 'Mysql',
-        'service' => '',
-        'url'     => '',
-        'status'  => 'OK',
-        'remark'  => ''
+        'module'   => 'Mysql',
+        'service'  => '',
+        'url'      => '',
+        'response' => 0.00,
+        'status'   => 'OK',
+        'remark'   => ''
     ];
+    private $conn;
 
     public function __construct()
     {
+        $this->start_time = microtime(true);
     }
 
-    public function connect($host, $user, $pass, $db)
+    public function connect($conf)
     {
         $this->outputs['service'] = 'Check Connection';
 
+        // Validate parameter
+        $fixs = ['servername', 'username', 'password', 'dbname'];
+        if (false === $this->validParams($fixs, $conf)) {
+            $this->outputs = [
+                'status' => 'ERROR',
+                'remark' => 'Require parameter (' . implode(',', $fixs) . ')'
+            ];
+        }
+
         try {
-            $conn = new PDO("mysql:host={$host};dbname={$db}", $user, $pass);
+            $this->conn = new PDO("mysql:host={$conf['servername']};dbname={$conf['dbname']};charset=utf8", $conf['username'], $conf['password']);
             // Set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             $this->outputs = [
                 'status'  => 'ERROR',
                 'remark'  => 'Can\'t connect to database : ' . $e->getMessage()
             ];
         }
-
-        $conn = null;
     }
 
-    public function getData($mysql, $database, $table, $sql = null)
+    public function query($conf, $sql)
     {
         $this->outputs['service'] = 'Check Query Datas';
 
-        mysql_select_db($database, $mysql);
-        mysql_query('SET NAMES UTF8', $mysql);
+        $this->connect($conf);
 
-        if (empty($sql)) {
-            $sql = "SELECT * FROM " . $table;
+        // Query
+        try {
+            $this->conn->query($sql);
+        } catch (PDOException  $e) {
+            $this->outputs = [
+                'status'  => 'ERROR',
+                'remark'  => 'Can\'t query datas : ' . $e->getMessage()
+            ];
         }
+    }
 
-        $result = mysql_query($sql);
-
-        return $result;
+    private function validParams($fixs, $params)
+    {
+        foreach ($fixs as $fix) {
+            // Check fix params
+            if (!isset($conf[$fix])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public function __destruct()
     {
+        $this->outputs['response'] = microtime(true) - $this->start_time;
+
+        $this->conn = null;
+
         return $this->outputs;
     }
 }
