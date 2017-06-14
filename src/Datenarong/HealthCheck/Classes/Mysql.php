@@ -12,6 +12,7 @@ class Mysql
         'status'   => 'OK',
         'remark'   => ''
     ];
+    private $conf = ['servername', 'username', 'password', 'dbname'];
     private $conn;
 
     public function __construct()
@@ -24,18 +25,25 @@ class Mysql
         $this->outputs['service'] = 'Check Connection';
 
         // Validate parameter
-        $fixs = ['servername', 'username', 'password', 'dbname'];
-        if (false === $this->validParams($fixs, $conf)) {
+        if (false === $this->validParams($conf)) {
             $this->outputs = [
                 'status' => 'ERROR',
-                'remark' => 'Require parameter (' . implode(',', $fixs) . ')'
+                'remark' => 'Require parameter (' . implode(',', $this->conf) . ')'
             ];
         }
 
         try {
+            // Connect to mysql
             $this->conn = new PDO("mysql:host={$conf['servername']};dbname={$conf['dbname']};charset=utf8", $conf['username'], $conf['password']);
             // Set the PDO error mode to exception
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            if (!$this->conn) {
+                $this->outputs = [
+                    'status'  => 'ERROR',
+                    'remark'  => 'Can\'t connect to database'
+                ];
+            }
         } catch (PDOException $e) {
             $this->outputs = [
                 'status'  => 'ERROR',
@@ -61,11 +69,11 @@ class Mysql
         }
     }
 
-    private function validParams($fixs, $params)
+    private function validParams($conf)
     {
-        foreach ($fixs as $fix) {
+        foreach ($this->conf as $k) {
             // Check fix params
-            if (!isset($conf[$fix])) {
+            if (!isset($conf[$k])) {
                 return false;
             }
         }
