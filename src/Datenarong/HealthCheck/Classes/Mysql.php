@@ -1,23 +1,15 @@
 <?php
 namespace Datenarong\HealthCheck\Classes;
 
-class Mysql
+class Mysql extends Base
 {
-    private $start_time;
-    private $outputs = [
-        'module'   => 'Mysql',
-        'service'  => '',
-        'url'      => '',
-        'response' => 0.00,
-        'status'   => 'OK',
-        'remark'   => ''
-    ];
     private $conf = ['servername', 'username', 'password', 'dbname'];
     private $conn;
 
     public function __construct()
     {
-        $this->start_time = microtime(true);
+        parent::__construct();
+        $this->outputs['module'] = 'Mysql';
     }
 
     public function connect($conf)
@@ -32,9 +24,13 @@ class Mysql
             ];
         }
 
+        // Set url
+        $this->outputs['url'] = $conf['servername'];
+
         try {
             // Connect to mysql
             $this->conn = new PDO("mysql:host={$conf['servername']};dbname={$conf['dbname']};charset=utf8", $conf['username'], $conf['password']);
+            
             // Set the PDO error mode to exception
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -56,6 +52,7 @@ class Mysql
     {
         $this->outputs['service'] = 'Check Query Datas';
 
+        // Connect database
         $this->connect($conf);
 
         // Query
@@ -82,8 +79,9 @@ class Mysql
 
     public function __destruct()
     {
-        $this->outputs['response'] = microtime(true) - $this->start_time;
+        parent::__destruct();
 
+        // Disconnect database
         $this->conn = null;
 
         return $this->outputs;

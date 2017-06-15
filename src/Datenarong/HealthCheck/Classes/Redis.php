@@ -1,7 +1,7 @@
 <?php
 namespace Datenarong\HealthCheck\Classes;
 
-class Redis
+class Redis extends Base
 {
     public function connect($server, $port = 6379)
     {

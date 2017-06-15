@@ -1,7 +1,7 @@
 <?php
 namespace Datenarong\HealthCheck\Classes;
 
-class Socket
+class Socket extends Base
 {
     public function connect($server, $port)
     {

@@ -1,24 +1,15 @@
 <?php
-
 namespace Datenarong\HealthCheck\Classes;
 
-class Oracle
+class Oracle extends Base
 {
-    private $start_time;
-    private $outputs = [
-        'module'   => 'Oracle',
-        'service'  => '',
-        'url'      => '',
-        'response' => 0.00,
-        'status'   => 'OK',
-        'remark'   => ''
-    ];
     private $conf = ['host', 'port', 'username', 'password', 'dbname', 'charset'];
     private $conn;
 
     public function __construct()
     {
-        $this->start_time = microtime(true);
+        parent::__construct();
+        $this->outputs['module'] = 'Oracle';
     }
 
     public function connect($conf)
@@ -33,14 +24,12 @@ class Oracle
             ];
         }
 
+        // Set url
+        $this->outputs['url'] = $conf['servername'];
+
         try {
             // Connect to oracle
-            $this->conn = oci_connect(
-                $conf['username'],
-                $conf['password'],
-                "{$conf['host']}:{$conf['port']}/{$conf['db']}",
-                $conf['charset']
-            );
+            $this->conn = oci_connect($conf['username'], $conf['password'], "{$conf['host']}:{$conf['port']}/{$conf['db']}", $conf['charset']);
         
             if (!$this->conn) {
                 $this->outputs = [
@@ -60,6 +49,7 @@ class Oracle
     {
         $this->outputs['service'] = 'Check Query Datas';
 
+        // Connect database
         $this->connect($conf);
 
         // Query
@@ -95,8 +85,9 @@ class Oracle
     
     public function __destruct()
     {
-        $this->outputs['response'] = microtime(true) - $this->start_time;
+        parent::__destruct();
 
+        // Disconnect database
         $this->conn = null;
 
         return $this->outputs;

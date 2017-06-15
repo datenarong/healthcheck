@@ -14,12 +14,6 @@ class HealthCheck
         echo 'Class name does not exists';
     }
 
-    public static function output($datas)
-    {
-        $output = new Output;
-        return $output->html($datas);
-    }
-
     private function cassandra()
     {
         return new \Datenarong\HealthCheck\Classes\Cassandra;

@@ -1,7 +1,7 @@
 <?php
 namespace Datenarong\HealthCheck\Classes;
 
-class Cassandra
+class Cassandra extends Base
 {
     public function connect($node, $try = 0)
     {

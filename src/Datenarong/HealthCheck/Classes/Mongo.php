@@ -1,7 +1,7 @@
 <?php
 namespace Datenarong\HealthCheck\Classes;
 
-class Mongo
+class Mongo extends Base
 {
     public function connect($hostname, $port, $database, $username = null, $password = null)
     {

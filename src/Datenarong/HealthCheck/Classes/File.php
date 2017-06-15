@@ -3,7 +3,7 @@ namespace Datenarong\HealthCheck\Classes;
 
 use SplFileObject;
 
-class File
+class File extends Base
 {
     private $module = 'File';
     private $handle;

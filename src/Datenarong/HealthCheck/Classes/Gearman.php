@@ -1,7 +1,7 @@
 <?php
 namespace Datenarong\HealthCheck\Classes;
 
-class Gearman
+class Gearman extends Base
 {
     public function connect($host, $port, $timeout = 500)
     {
