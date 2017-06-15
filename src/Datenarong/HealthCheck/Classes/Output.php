@@ -13,7 +13,7 @@ class Output
     {
         $html =
             "<html>\n
-				<head>\n
+				<head>\n 
 				</head>\n
 				<body>" . $this->getTable($datas) . "</body>\n
 			</html>";

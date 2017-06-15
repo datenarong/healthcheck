@@ -14,42 +14,42 @@ class HealthCheck
         echo 'Class name does not exists';
     }
 
-    private function cassandra()
+    private static function cassandra()
     {
         return new \Datenarong\HealthCheck\Classes\Cassandra;
     }
 
-    private function file()
+    private static function file()
     {
         return new \Datenarong\HealthCheck\Classes\File;
     }
 
-    private function gearman()
+    private static function gearman()
     {
         return new \Datenarong\HealthCheck\Classes\Gearman;
     }
 
-    private function mongo()
+    private static function mongo()
     {
         return new \Datenarong\HealthCheck\Classes\Mongo;
     }
 
-    private function mysql()
+    private static function mysql()
     {
         return new \Datenarong\HealthCheck\Classes\Mysql;
     }
 
-    private function oracle()
+    private static function oracle()
     {
         return new \Datenarong\HealthCheck\Classes\Oracle;
     }
 
-    private function redis()
+    private static function redis()
     {
         return new \Datenarong\HealthCheck\Classes\Redis;
     }
 
-    private function socket()
+    private static function socket()
     {
         return new \Datenarong\HealthCheck\Classes\Socket;
     }

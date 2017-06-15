@@ -1,6 +1,8 @@
 <?php
 namespace Datenarong\HealthCheck\Classes;
 
+use PDO;
+
 class Mysql extends Base
 {
     private $conf = ['servername', 'username', 'password', 'dbname'];
