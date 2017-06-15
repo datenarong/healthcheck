@@ -1,6 +1,7 @@
 <?php
 namespace Datenarong\HealthCheck\Classes;
 
+use Datenarong\HealthCheck\Interfaces\BaseInterface;
 use Datenarong\HealthCheck\Classes\Output;
 
 abstract class Base implements BaseInterface
