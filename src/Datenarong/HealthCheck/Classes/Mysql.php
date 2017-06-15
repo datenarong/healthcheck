@@ -48,14 +48,45 @@ class Mysql extends Base
                 'remark'  => 'Can\'t connect to database : ' . $e->getMessage()
             ];
         }
+
+        return $this->outputs;
     }
 
     public function query($conf, $sql)
     {
         $this->outputs['service'] = 'Check Query Datas';
 
-        // Connect database
-        $this->connect($conf);
+        // Validate parameter
+        if (false === $this->validParams($conf)) {
+            $this->outputs = [
+                'status' => 'ERROR',
+                'remark' => 'Require parameter (' . implode(',', $this->conf) . ')'
+            ];
+        }
+
+        // Set url
+        $this->outputs['url'] = $conf['servername'];
+
+        try {
+            // Connect to mysql
+            $this->conn = new PDO("mysql:host={$conf['servername']};dbname={$conf['dbname']};charset=utf8", $conf['username'], $conf['password']);
+            
+            // Set the PDO error mode to exception
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            if (!$this->conn) {
+                $this->outputs = [
+                    'status'  => 'ERROR',
+                    'remark'  => 'Can\'t connect to database'
+                ];
+            }
+        } catch (PDOException $e) {
+            $this->outputs = [
+                'status'  => 'ERROR',
+                'remark'  => 'Can\'t connect to database : ' . $e->getMessage()
+            ];
+        }
+
 
         // Query
         try {
@@ -66,6 +97,8 @@ class Mysql extends Base
                 'remark'  => 'Can\'t query datas : ' . $e->getMessage()
             ];
         }
+
+        return $this->outputs;
     }
 
     private function validParams($conf)
@@ -85,7 +118,5 @@ class Mysql extends Base
 
         // Disconnect database
         $this->conn = null;
-
-        return $this->outputs;
     }
 }
