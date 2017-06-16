@@ -25,6 +25,8 @@ class Gearman extends Base
                 'status' => 'ERROR',
                 'remark' => 'Require parameter (' . implode(',', $this->conf) . ')'
             ];
+
+            return $this;
         }
 
         // Set url
@@ -47,13 +49,22 @@ class Gearman extends Base
             ];
         }
 
-        return $this->outputs;
+        return $this;
     }
 
     // This method want to get amount worker
     // But response $this->gm_admin->getWorkers() is Bug! can't get array[0]
     public function workerRunning()
     {
+        if (!$this->gm_admin) {
+            $this->outputs = [
+                'status'  => 'ERROR',
+                'remark'  => 'Can\'t connect to database'
+            ];
+
+            return $this;
+        }
+
         $workers = (array)$this->gm_admin->getWorkers();
         $wk = [];
         foreach ($workers as $key => $value) {
@@ -63,14 +74,22 @@ class Gearman extends Base
             }
         }
 
-        return count($wk);
+        $this->outputs['service'] .= '<br>Number of Worker : ' . count($wk);
+        
+        return $this;
     }
 
     // Method for get total queue in german server
-    public function totalQueue($server, $port = 4730)
+    public function totalQueue()
     {
-        // Coonnect by gearman admin
-        $gm_admin   = new GearmanAdmin($server, $port);
+        if (!$this->gm_admin) {
+            $this->outputs = [
+                'status'  => 'ERROR',
+                'remark'  => 'Can\'t connect to database'
+            ];
+
+            return $this;
+        }
 
         // Get queue
         $res = (array)$gm_admin->getStatus();
@@ -78,27 +97,29 @@ class Gearman extends Base
         
         $total = $this->getNumberOfQueueFromStatusOutput($res);
         
-        return $total;
+        $this->outputs['service'] .= '<br>Number of Queue : ' . $total;
+
+        return $this;
     }
 
     // Method for format execute output
-    private function getNumberOfQueueFromExecuteOutput($res)
-    {
-        // Define output
-        $total = 0;
-        $datas = explode("\n", $res);
-        if (! empty($datas)) {
-            foreach ($datas as $data) {
-                if (!empty($data) || $data !== '.') {
-                    // Get number of queue
-                    $queues = explode("\t", $data);
-                    $total += ((isset($queues['1']) && ! empty($queues['1'])) ? (int)$queues['1'] : 0);
-                }
-            }
-        }
+    // private function getNumberOfQueueFromExecuteOutput($res)
+    // {
+    //     // Define output
+    //     $total = 0;
+    //     $datas = explode("\n", $res);
+    //     if (! empty($datas)) {
+    //         foreach ($datas as $data) {
+    //             if (!empty($data) || $data !== '.') {
+    //                 // Get number of queue
+    //                 $queues = explode("\t", $data);
+    //                 $total += ((isset($queues['1']) && ! empty($queues['1'])) ? (int)$queues['1'] : 0);
+    //             }
+    //         }
+    //     }
         
-        return $total;
-    }
+    //     return $total;
+    // }
     
     // Method for format admin status output
     private function getNumberOfQueueFromStatusOutput($datas)
@@ -108,8 +129,8 @@ class Gearman extends Base
         foreach ($datas as $queues) {
             // Loop for queue
             foreach ($queues as $queue) {
-                if (isset($queue[0])) {
-                    $total += (int)$queue[0];
+                if (isset($queue['0'])) {
+                    $total += (int)$queue['0'];
                 }
             }
         }
