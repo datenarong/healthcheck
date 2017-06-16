@@ -11,18 +11,18 @@ class Output
     private function getTable($datas)
     {
         $html =
-            "<table id=\"responsive-example-table\" class=\"large-only\" cellspacing=\"0\">\n
-                <tbody>\n
-                    <tr align=\"left\">\n
-                        <th width=\"12%\"></th>\n
-                        <th width=\"30%\">service</th>\n
-                        <th width=\"30%\">url</th>\n
-                        <th width=\"12%\">response</th>\n
-                        <th width=\"12%\">status</th>\n
-                        <th width=\"12%\">remark</th>\n
-                    </tr>\n"
+            "<table id=\"responsive-example-table\" class=\"large-only\" cellspacing=\"0\">
+                <tbody>
+                    <tr align=\"left\">
+                        <th width=\"12%\"></th>
+                        <th width=\"30%\">service</th>
+                        <th width=\"30%\">url</th>
+                        <th width=\"12%\">response</th>
+                        <th width=\"12%\">status</th>
+                        <th width=\"12%\">remark</th>
+                    </tr>"
                     . $this->getRows($datas) .
-            "</tbody>\n
+            "</tbody>
         </table>";
 
         return $html;
@@ -33,14 +33,14 @@ class Output
         $html = '';
         foreach ($datas as $key => $value) {
             $html .=
-                "<tr align=\"left\">\n
-                    <td>{$value['module']}</td>\n
-                    <td>{$value['service']}</td>\n
-                    <td>{$value['url']}</td>\n
-                    <td>{$value['response']}</td>\n
-                    <td>{$value['status']}</td>\n
-                    <td>{$value['remark']}</td>\n
-                </tr>\n";
+                "<tr align=\"left\">
+                    <td>{$value['module']}</td>
+                    <td>{$value['service']}</td>
+                    <td>{$value['url']}</td>
+                    <td>{$value['response']}</td>
+                    <td>{$value['status']}</td>
+                    <td>{$value['remark']}</td>
+                </tr>";
         }
 
         return $html;
