@@ -20,10 +20,10 @@ class Output
                         <th width=\"12%\">response</th>
                         <th width=\"12%\">status</th>
                         <th width=\"12%\">remark</th>
-                    </tr>"
+                    </tr>\n"
                     . $this->getRows($datas) .
-            "</tbody>
-        </table>";
+                "</tbody>
+            </table>";
 
         return $html;
     }
@@ -31,7 +31,7 @@ class Output
     private function getRows($datas)
     {
         $html = '';
-        foreach ($datas as $key => $value) {
+        foreach ($datas as $value) {
             $html .=
                 "<tr align=\"left\">
                     <td>{$value['module']}</td>
@@ -40,7 +40,7 @@ class Output
                     <td>{$value['response']}</td>
                     <td>{$value['status']}</td>
                     <td>{$value['remark']}</td>
-                </tr>";
+                </tr>\n";
         }
 
         return $html;
