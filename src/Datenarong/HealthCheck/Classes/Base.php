@@ -2,11 +2,11 @@
 namespace Datenarong\HealthCheck\Classes;
 
 use Datenarong\HealthCheck\Interfaces\BaseInterface;
-use Datenarong\HealthCheck\Classes\Output;
 
 abstract class Base implements BaseInterface
 {
     private $start_time;
+    protected $conf;
     protected $outputs = [
         'module'   => '',
         'service'  => '',
@@ -21,10 +21,20 @@ abstract class Base implements BaseInterface
         $this->start_time = microtime(true);
     }
 
-    public function output($datas)
+    public function get()
     {
-        $output = new Output;
-        echo $output->html($datas);
+        return $this->outputs;
+    }
+
+    protected function validParams($conf)
+    {
+        foreach ($this->conf as $k) {
+            // Check fix params
+            if (!isset($conf[$k])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public function __destruct()

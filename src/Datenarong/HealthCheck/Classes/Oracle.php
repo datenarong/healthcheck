@@ -3,13 +3,14 @@ namespace Datenarong\HealthCheck\Classes;
 
 class Oracle extends Base
 {
-    private $conf = ['host', 'port', 'username', 'password', 'dbname', 'charset'];
     private $conn;
 
     public function __construct()
     {
         parent::__construct();
+        
         $this->outputs['module'] = 'Oracle';
+        $this->conf = ['host', 'port', 'username', 'password', 'dbname', 'charset'];
     }
 
     public function connect($conf)
@@ -25,7 +26,7 @@ class Oracle extends Base
         }
 
         // Set url
-        $this->outputs['url'] = $conf['servername'];
+        $this->outputs['url'] = $conf['host'];
 
         try {
             // Connect to oracle
@@ -60,7 +61,7 @@ class Oracle extends Base
         }
 
         // Set url
-        $this->outputs['url'] = $conf['servername'];
+        $this->outputs['url'] = $conf['host'];
 
         try {
             // Connect to oracle
@@ -99,17 +100,6 @@ class Oracle extends Base
         }
 
         return $this->outputs;
-    }
-
-    private function validParams($conf)
-    {
-        foreach ($this->conf as $k) {
-            // Check fix params
-            if (!isset($conf[$k])) {
-                return false;
-            }
-        }
-        return true;
     }
     
     public function __destruct()

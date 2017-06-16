@@ -1,20 +1,60 @@
 <?php
 namespace Datenarong\HealthCheck\Classes;
 
+use Ibmurai\PhpGearmanAdmin\GearmanAdmin;
+
 class Gearman extends Base
 {
-    public function connect($host, $port, $timeout = 500)
+    private $gm_admin;
+
+    public function __construct()
     {
-        require_once(BASE_DIR.'classes/gearmanAdmin/GearmanAdmin.php');
-        $gmAdmin = new GearmanAdmin($host, $port, $timeout);
-        return $gmAdmin;
+        parent::__construct();
+        
+        $this->outputs['module'] = 'Gearman';
+        $this->conf = ['host', 'port', 'timeout'];
+    }
+
+    public function connect($conf)
+    {
+         $this->outputs['service'] = 'Check Connection';
+
+        // Validate parameter
+        if (false === $this->validParams($conf)) {
+            $this->outputs = [
+                'status' => 'ERROR',
+                'remark' => 'Require parameter (' . implode(',', $this->conf) . ')'
+            ];
+        }
+
+        // Set url
+        $this->outputs['url'] = $conf['host'];
+
+        try {
+            $this->gm_admin = new GearmanAdmin($conf['host'], $conf['port'], $conf['timeout']);
+            
+            // Check status gearman
+            if (!$this->gm_admin->getStatus) {
+                $this->outputs = [
+                    'status'  => 'ERROR',
+                    'remark'  => 'Can\'t connect to gearman'
+                ];
+            }
+        } catch (Exception $e) {
+            $this->outputs = [
+                'status'  => 'ERROR',
+                'remark'  => 'Can\'t connect to gearman : ' . $e->getMessage()
+            ];
+        }
+
+        return $this->outputs;
     }
 
     // This method want to get amount worker
-    // But response $gmAdmin->getWorkers() is Bug! can't get array[0]
-    public function workerRunning($gmAdmin)
+    // But response $this->gm_admin->getWorkers() is Bug! can't get array[0]
+    public function workerRunning()
     {
-        $workers = (array) $gmAdmin->getWorkers();
+        $workers = (array)$this->gm_admin->getWorkers();
         $wk = [];
         foreach ($workers as $key => $value) {
             if (strpos($key, 'GearmanAdminWorkers') !== false && strpos($key, '_workers') !== false) {
@@ -26,6 +66,20 @@ class Gearman extends Base
         return count($wk);
     }
 
+    // Method for get total queue in german server
+    public function totalQueue($server, $port = 4730)
+    {
+        // Coonnect by gearman admin
+        $gm_admin   = new GearmanAdmin($server, $port);
+
+        // Get queue
+        $res = (array)$gm_admin->getStatus();
+        // $res = shell_exec( "(echo status ; sleep 0.1) | netcat {$server} {$port}" );
+        
+        $total = $this->getNumberOfQueueFromStatusOutput($res);
+        
+        return $total;
+    }
 
     // Method for format execute output
     private function getNumberOfQueueFromExecuteOutput($res)
@@ -59,21 +113,6 @@ class Gearman extends Base
                 }
             }
         }
-        
-        return $total;
-    }
-
-    // Method for get total queue in german server
-    public function getTotalQueue($server, $port = 4730)
-    {
-        // Coonnect by gearman admin
-        $gm_admin   = new GearmanAdmin($server, $port);
-
-        // Get queue
-        $res = (array)$gm_admin->getStatus();
-        // $res = shell_exec( "(echo status ; sleep 0.1) | netcat {$server} {$port}" );
-        
-        $total = $this->getNumberOfQueueFromStatusOutput($res);
         
         return $total;
     }
