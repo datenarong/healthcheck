@@ -30,7 +30,7 @@ class Oracle extends Base
 
         try {
             // Connect to oracle
-            $this->conn = oci_connect($conf['username'], $conf['password'], "{$conf['host']}:{$conf['port']}/{$conf['db']}", $conf['charset']);
+            $this->conn = oci_connect($conf['username'], $conf['password'], "{$conf['host']}:{$conf['port']}/{$conf['dbname']}", $conf['charset']);
         
             if (!$this->conn) {
                 $this->outputs = [
