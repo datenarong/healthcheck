@@ -23,6 +23,8 @@ class Oracle extends Base
                 'status' => 'ERROR',
                 'remark' => 'Require parameter (' . implode(',', $this->conf) . ')'
             ];
+
+            return $this;
         }
 
         // Set url
@@ -57,6 +59,8 @@ class Oracle extends Base
                 'status'  => 'ERROR',
                 'remark'  => 'Can\'t connect to database'
             ];
+
+            return $this;
         }
 
         // Query

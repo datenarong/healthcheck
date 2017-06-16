@@ -25,6 +25,8 @@ class Mysql extends Base
                 'status' => 'ERROR',
                 'remark' => 'Require parameter (' . implode(',', $this->conf) . ')'
             ];
+
+            return $this;
         }
 
         // Set url
