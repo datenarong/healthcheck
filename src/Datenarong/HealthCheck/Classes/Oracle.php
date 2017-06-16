@@ -45,38 +45,17 @@ class Oracle extends Base
             ];
         }
 
-        return $this->outputs;
+        return $this;
     }
 
-    public function query($conf, $sql)
+    public function query($sql)
     {
         $this->outputs['service'] = 'Check Query Datas';
 
-        // Validate parameter
-        if (false === $this->validParams($conf)) {
-            $this->outputs = [
-                'status' => 'ERROR',
-                'remark' => 'Require parameter (' . implode(',', $this->conf) . ')'
-            ];
-        }
-
-        // Set url
-        $this->outputs['url'] = $conf['host'];
-
-        try {
-            // Connect to oracle
-            $this->conn = oci_connect($conf['username'], $conf['password'], "{$conf['host']}:{$conf['port']}/{$conf['db']}", $conf['charset']);
-        
-            if (!$this->conn) {
-                $this->outputs = [
-                    'status'  => 'ERROR',
-                    'remark'  => 'Can\'t connect to database'
-                ];
-            }
-        } catch (Exception $e) {
+        if (!$this->conn) {
             $this->outputs = [
                 'status'  => 'ERROR',
-                'remark'  => 'Can\'t connect to database : ' . $e->getMessage()
+                'remark'  => 'Can\'t connect to database'
             ];
         }
 
@@ -99,14 +78,11 @@ class Oracle extends Base
             ];
         }
 
-        return $this->outputs;
+        return $this;
     }
     
     public function __destruct()
     {
         parent::__destruct();
-
-        // Disconnect database
-        $this->conn = null;
     }
 }
