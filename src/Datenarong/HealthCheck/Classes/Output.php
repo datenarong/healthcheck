@@ -2,7 +2,7 @@
 
 namespace Datenarong\HealthCheck\Classes;
 
-class Output
+final class Output
 {
     public function html($datas, $title = null)
     {
@@ -17,8 +17,10 @@ class Output
                 . $this->getFooter() .
                 '</body>
             </html>';
+
             return $html;
     }
+
     private function getHeader()
     {
         $header = '
@@ -50,12 +52,15 @@ class Output
             
             </style>
         ';
+
         return $header;
     }
+
     private function getTitle($title)
     {
         return (!empty($title)) ? "<h3 class=\"text-center\">{$title}</h3>" : '';
     }
+
     private function getBody($datas, $title)
     {
         $body = '
@@ -65,8 +70,10 @@ class Output
             . $this->getSummary($datas) .
                 '<br><br><br>' .
             '</div>';
+
         return $body;
     }
+
     private function getFooter()
     {
         $footer = '
@@ -74,8 +81,10 @@ class Output
             <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
         ';
+
         return $footer;
     }
+
     private function getSummary($datas)
     {
         $status = true;
@@ -90,8 +99,10 @@ class Output
                 }
             }
         }
+
         return ($status) ? 'THIS_PAGE_IS_COMPLETELY_LOADED' : '';
     }
+
     private function getTable($datas)
     {
         $table = '';
@@ -114,12 +125,15 @@ class Output
                 '</tbody>
             </table><br>';
         }
+
         return $table;
     }
+
     private function getTableTitle($title = null)
     {
         return (!empty($title)) ? "<h3>{$title}</h3>" : '';
     }
+
     private function removeFristBr($val)
     {
         $len = strlen($val) - 1;
@@ -130,6 +144,7 @@ class Output
         
         return null;
     }
+
     private function getTableRows($datas)
     {
         $html = '';
@@ -152,6 +167,7 @@ class Output
                 <td width=\"\">{$value['remark']}</td>
             </tr>";
         }
+
         return $html;
     }
 }

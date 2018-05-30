@@ -4,7 +4,7 @@ namespace Datenarong\HealthCheck\Classes;
 
 use Datenarong\HealthCheck\Classes\Base;
 
-class Curl extends Base
+final class Curl extends Base
 {
     private $start_time;
 
@@ -27,7 +27,7 @@ class Curl extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'Can\'t post url : is resource fail',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
                 
                 return $this;
@@ -47,7 +47,7 @@ class Curl extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t get url : ' . $e->getMessage(),
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
             
             return $this;
@@ -57,7 +57,7 @@ class Curl extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t get url http code not 200 or 301',
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -67,7 +67,7 @@ class Curl extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t get url',
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -77,7 +77,7 @@ class Curl extends Base
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
         
         return $this;
@@ -97,7 +97,7 @@ class Curl extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'Can\'t post url : is resource fail',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
                 
                 return $this;
@@ -117,7 +117,7 @@ class Curl extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t post url : ' . $e->getMessage(),
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
             
             return $this;
@@ -127,7 +127,7 @@ class Curl extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t post url http code not 200 or 301',
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -137,7 +137,7 @@ class Curl extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t post url',
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
             
             return $this;
@@ -147,7 +147,7 @@ class Curl extends Base
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
 
         return $this;

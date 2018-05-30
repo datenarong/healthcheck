@@ -4,7 +4,7 @@ namespace Datenarong\HealthCheck\Classes;
 
 use Datenarong\HealthCheck\Classes\Base;
 
-class Socket extends Base
+final class Socket extends Base
 {
     private $start_time;
     public function __construct($module_name = null)
@@ -13,6 +13,7 @@ class Socket extends Base
         $this->outputs['module'] = (!empty($module_name)) ? $module_name : 'Socket';
         $this->require_config = ['host', 'port'];
     }
+
     public function connect($conf)
     {
         try {
@@ -22,11 +23,12 @@ class Socket extends Base
             $flags         = STREAM_CLIENT_CONNECT;
             $flags         = $flags | STREAM_CLIENT_PERSISTENT;
             $socket        = @stream_socket_client($remote_socket, $err_no, $err_str, 2.5, $flags);
+
             if (!$socket) {
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'Can\'t Connect to Socket',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
                 return $this;
             }
@@ -34,15 +36,17 @@ class Socket extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Connect to Socket : ' . $e->getMessage(),
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
+
             return $this;
         }
+
         // Success
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
         
         return $this;

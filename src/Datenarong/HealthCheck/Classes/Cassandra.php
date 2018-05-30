@@ -5,7 +5,7 @@ namespace Datenarong\HealthCheck\Classes;
 use Datenarong\HealthCheck\Classes\Base;
 use Cassandra\Connection;
 
-class Cassandra extends Base
+final class Cassandra extends Base
 {
     private $start_time;
 
@@ -26,7 +26,7 @@ class Cassandra extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Require parameter (' . implode(',', $this->require_config) . ')',
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -46,7 +46,7 @@ class Cassandra extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'Can\'t Connect to Database',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
 
                 return $this;
@@ -55,7 +55,7 @@ class Cassandra extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Connect to Database : ' . $e->getMessage(),
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -65,7 +65,7 @@ class Cassandra extends Base
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
 
         return $this;
@@ -79,7 +79,7 @@ class Cassandra extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Connect to Database',
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -99,7 +99,7 @@ class Cassandra extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'Can\'t Query Datas',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
 
                 return $this;
@@ -108,7 +108,7 @@ class Cassandra extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Query Datas : ' . $e->getMessage(),
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -118,7 +118,7 @@ class Cassandra extends Base
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
 
         return $this;

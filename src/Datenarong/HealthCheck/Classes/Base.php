@@ -14,7 +14,7 @@ abstract class Base
         'url'      => '',
         'response' => 0,
         'status'   => '',
-        'remark'   => ''
+        'remark'   => '',
     ];
 
     public function get()
@@ -30,6 +30,7 @@ abstract class Base
                 return false;
             }
         }
+
         return true;
     }
 
@@ -37,7 +38,7 @@ abstract class Base
     {
         $error = false;
         if (array_key_exists('status', $datas) && $datas['status'] === 'ERROR') {
-            $error = ture;
+            $error = true;
         }
 
         foreach ($datas as $key => $value) {

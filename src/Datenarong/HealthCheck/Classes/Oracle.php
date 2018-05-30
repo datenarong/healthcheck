@@ -2,16 +2,18 @@
 
 namespace Datenarong\HealthCheck\Classes;
 
-class Oracle extends Base
+final class Oracle extends Base
 {
     private $conn;
     private $start_time;
+
     public function __construct($module_name = null)
     {
         $this->start_time = microtime(true);
         $this->outputs['module'] = (!empty($module_name)) ? $module_name : 'Oracle';
         $this->require_config = ['host', 'port', 'username', 'password', 'dbname', 'charset'];
     }
+
     public function connect($conf)
     {
         $this->outputs['service'] = 'Check Connection';
@@ -20,10 +22,12 @@ class Oracle extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Require parameter (' . implode(',', $this->require_config) . ')',
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
+
             return $this;
         }
+
         // Set url
         $this->outputs['url'] = "{$conf['host']}:{$conf['port']}";
         try {
@@ -33,7 +37,7 @@ class Oracle extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'Can\'t Connect to Database',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
                 
                 return $this;
@@ -42,19 +46,22 @@ class Oracle extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Connect to Database : ' . $e->getMessage(),
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
             
             return $this;
         }
+
         // Success
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
+
         return $this;
     }
+
     public function query($sql = null)
     {
         $this->outputs['service'] .= '<br>Check Query Datas';
@@ -62,12 +69,15 @@ class Oracle extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Connect to Database',
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
+
             return $this;
         }
+
         // Get SQL
         $sql = (!empty($sql)) ? $sql : 'SELECT TO_CHAR(SYSDATE, \'MM-DD-YYYY HH24:MI:SS\') "NOW" FROM DUAL';
+
         // Query
         try {
             $orc_parse = oci_parse($this->conn, $sql);
@@ -77,23 +87,25 @@ class Oracle extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'Can\'t Query Datas',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
+
                 return $this;
             }
         } catch (Exception $e) {
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Query Datas : ' . $e->getMessage(),
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
+
             return $this;
         }
         // Success
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
         
         return $this;

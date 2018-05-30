@@ -1,9 +1,10 @@
 <?php
+
 namespace Datenarong\HealthCheck\Classes;
 
 use Datenarong\HealthCheck\Classes\Base;
 
-class File extends Base
+final class File extends Base
 {
     private $handle;
     private $start_time;
@@ -26,7 +27,7 @@ class File extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => "Directory {$path} Does Not Exists!",
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -44,7 +45,7 @@ class File extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Write File : ' . $e->getMessage(),
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -54,7 +55,7 @@ class File extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Write File',
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -64,7 +65,7 @@ class File extends Base
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
 
         return $this;
@@ -84,7 +85,7 @@ class File extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => "Directory {$path} Does Not Exists!",
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
 
                 return $this;
@@ -95,7 +96,7 @@ class File extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'File Not Found!',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
 
                 return $this;
@@ -111,7 +112,7 @@ class File extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'Can\'t Read File',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
 
                 return $this;
@@ -120,7 +121,7 @@ class File extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Read File : ' . $e->getMessage(),
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -130,7 +131,7 @@ class File extends Base
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
 
         return $this;
@@ -152,7 +153,7 @@ class File extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => "Directory {$path} Does Not Exists!",
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
 
                 return $this;
@@ -169,7 +170,7 @@ class File extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => "File {$file} Not Found!",
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
 
                 return $this;
@@ -182,7 +183,7 @@ class File extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'Size of File is Not Equal!',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
 
                 return $this;
@@ -193,7 +194,7 @@ class File extends Base
                 $this->setOutputs([
                     'status'   => 'ERROR',
                     'remark'   => 'Content of File is Not Equal!',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
 
                 return $this;
@@ -202,7 +203,7 @@ class File extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Can\'t Compare File : ' . $e->getMessage(),
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -212,7 +213,7 @@ class File extends Base
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
 
         return $this;
@@ -230,7 +231,7 @@ class File extends Base
             $this->setOutputs([
                 'status'   => 'ERROR',
                 'remark'   => 'Extension File Not Match',
-                'response' => $this->start_time
+                'response' => $this->start_time,
             ]);
 
             return $this;
@@ -240,7 +241,7 @@ class File extends Base
         $this->setOutputs([
             'status'   => 'OK',
             'remark'   => '',
-            'response' => $this->start_time
+            'response' => $this->start_time,
         ]);
 
         return $this;
@@ -275,7 +276,7 @@ class File extends Base
                 $this->setOutputs([
                     'status'   => 'OK',
                     'remark'   => '',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
                 continue;
             }
@@ -292,7 +293,7 @@ class File extends Base
                     $this->setOutputs([
                         'status'   => 'ERROR',
                         'remark'   => "File {$file} is remain!",
-                        'response' => $this->start_time
+                        'response' => $this->start_time,
                     ]);
                     continue;
                 }
@@ -300,7 +301,7 @@ class File extends Base
                 $this->setOutputs([
                     'status'   => 'OK',
                     'remark'   => '',
-                    'response' => $this->start_time
+                    'response' => $this->start_time,
                 ]);
             }
         }
