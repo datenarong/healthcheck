@@ -1,45 +1,126 @@
 <?php
+
 namespace Datenarong\HealthCheck\Classes;
+
+use Datenarong\HealthCheck\Classes\Base;
+use Cassandra\Connection;
 
 class Cassandra extends Base
 {
-    public function connect($node, $try = 0)
+    private $start_time;
+
+    public function __construct($module_name = null)
     {
+        $this->start_time = microtime(true);
 
-        if (isset($node['keyspace'])) {
-            $connection = new Cassandra\Connection($node, $node['keyspace']);
-        } else {
-            $connection = new Cassandra\Connection($node);
-        }
-
-        try {
-            $connection->connect();
-        } catch (\Exception $e) {
-            if ($try < 3) {
-                $try++;
-                return $this->checkConnectCassandra($node, $try);
-            }
-            $connection = null;
-        }
-
-        // Set consistency level for farther requests (default is CONSISTENCY_ONE)
-        //$connection->setConsistency(Request::CONSISTENCY_QUORUM);
-        return $connection;
+        $this->outputs['module'] = (!empty($module_name)) ? $module_name : 'Cassandra';
+        $this->require_config = ['node'];
     }
 
-    public function getData($cassandra, $cql = null)
+    public function connect($conf)
     {
+        $this->outputs['service'] = 'Check Connection';
 
-        if (empty($cql)) {
-            $cql = "SELECT count(*) FROM noti_request WHERE app_id = 14 ALLOW FILTERING";
+        // Validate parameter
+        if (false === $this->validParams($conf)) {
+            $this->setOutputs([
+                'status'   => 'ERROR',
+                'remark'   => 'Require parameter (' . implode(',', $this->require_config) . ')',
+                'response' => $this->start_time
+            ]);
+
+            return $this;
         }
 
-        $statement = $cassandra->queryAsync($cql);
+        // Set url
+        $this->outputs['url'] = $conf['node'];
 
-        // Wait until received the response, can be reversed order
-        $result = $statement->getResponse();
-        $result = $result->fetchRow()['count'];
+        try {
+            $connection = (isset($conf['node']['keyspace']))
+                ? new Connection($conf['node'], $conf['node']['keyspace'])
+                : new Connection($conf['node']);
 
-        return $result;
+            $this->conn = $connection->connect();
+        
+            if (!$this->conn) {
+                $this->setOutputs([
+                    'status'   => 'ERROR',
+                    'remark'   => 'Can\'t Connect to Database',
+                    'response' => $this->start_time
+                ]);
+
+                return $this;
+            }
+        } catch (Exception $e) {
+            $this->setOutputs([
+                'status'   => 'ERROR',
+                'remark'   => 'Can\'t Connect to Database : ' . $e->getMessage(),
+                'response' => $this->start_time
+            ]);
+
+            return $this;
+        }
+
+        // Success
+        $this->setOutputs([
+            'status'   => 'OK',
+            'remark'   => '',
+            'response' => $this->start_time
+        ]);
+
+        return $this;
+    }
+
+    public function query($cql = null)
+    {
+        $this->outputs['service'] = 'Check Query Datas';
+
+        if (!$this->conn) {
+            $this->setOutputs([
+                'status'   => 'ERROR',
+                'remark'   => 'Can\'t Connect to Database',
+                'response' => $this->start_time
+            ]);
+
+            return $this;
+        }
+
+        // Defualt CQL
+        $cql = (!empty($cql)) ? $cql : 'SELECT count(*) FROM noti_request WHERE app_id = 14 ALLOW FILTERING';
+
+        try {
+            // Query
+            $statement = $cassandra->queryAsync($cql);
+
+            // Wait until received the response, can be reversed order
+            $result = $statement->getResponse();
+            $result = $result->fetchRow()['count'];
+            if (!$result) {
+                $this->setOutputs([
+                    'status'   => 'ERROR',
+                    'remark'   => 'Can\'t Query Datas',
+                    'response' => $this->start_time
+                ]);
+
+                return $this;
+            }
+        } catch (Exception  $e) {
+            $this->setOutputs([
+                'status'   => 'ERROR',
+                'remark'   => 'Can\'t Query Datas : ' . $e->getMessage(),
+                'response' => $this->start_time
+            ]);
+
+            return $this;
+        }
+
+        // Success
+        $this->setOutputs([
+            'status'   => 'OK',
+            'remark'   => '',
+            'response' => $this->start_time
+        ]);
+
+        return $this;
     }
 }

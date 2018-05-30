@@ -1,44 +1,51 @@
 <?php
+
 namespace Datenarong\HealthCheck\Classes;
 
 use Datenarong\HealthCheck\Interfaces\BaseInterface;
 
-abstract class Base implements BaseInterface
+abstract class Base
 {
     private $start_time;
-    protected $conf;
+    protected $require_config;
     protected $outputs = [
         'module'   => '',
         'service'  => '',
         'url'      => '',
-        'response' => 0.00,
-        'status'   => 'OK',
+        'response' => 0,
+        'status'   => '',
         'remark'   => ''
     ];
-
-    public function __construct()
-    {
-        $this->start_time = microtime(true);
-    }
 
     public function get()
     {
         return $this->outputs;
     }
 
-    protected function validParams($conf)
+    protected function validParams($config)
     {
-        foreach ($this->conf as $k) {
-            // Check fix params
-            if (!isset($conf[$k])) {
+        foreach ($this->require_config as $param_name) {
+            // Checkey params is require
+            if (!isset($config[$param_name])) {
                 return false;
             }
         }
         return true;
     }
 
-    public function __destruct()
+    protected function setOutputs($datas = [])
     {
-        $this->outputs['response'] = microtime(true) - $this->start_time;
+        $error = false;
+        if (array_key_exists('status', $datas) && $datas['status'] === 'ERROR') {
+            $error = ture;
+        }
+
+        foreach ($datas as $key => $value) {
+            if (isset($this->outputs[$key]) && $key !== 'response') {
+                $this->outputs[$key] .= ($error) ? "<br><span class=\"error\">{$value}</span>" : "<br>{$value}";
+            } else {
+                $this->outputs['response'] += (microtime(true) - $value);
+            }
+        }
     }
 }
